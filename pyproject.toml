@@ -16,10 +16,9 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Repository = "https://github.com/your-github-username/comfyui-prompt-batch-writer"
+Repository = "https://github.com/update-loulan/comfyui-prompt-batch-writer"
 
 [tool.comfy]
-# Fill in your own PublisherId from https://registry.comfy.org when publishing.
 PublisherId = "update-loulan"
 DisplayName = "Loulan-prompt"
 Icon = ""
