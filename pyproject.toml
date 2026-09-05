@@ -20,6 +20,6 @@ Repository = "https://github.com/your-github-username/comfyui-prompt-batch-write
 
 [tool.comfy]
 # Fill in your own PublisherId from https://registry.comfy.org when publishing.
-PublisherId = "your-publisher-id"
+PublisherId = "update-loulan"
 DisplayName = "Loulan-prompt"
 Icon = ""
