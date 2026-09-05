@@ -1,0 +1,25 @@
+[project]
+name = "comfyui-prompt-batch-writer"
+description = "A ComfyUI custom node for batch-writing up to 100 prompts with per-prompt toggles, trigger prefix, folder import (txt/csv/json) and folder-based presets. Splits one run into N queue items. Bilingual UI (Chinese / English)."
+version = "0.1.0"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Loulan-prompt Authors" },
+]
+keywords = ["comfyui", "custom-node", "prompt", "batch", "queue"]
+classifiers = [
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/your-github-username/comfyui-prompt-batch-writer"
+
+[tool.comfy]
+# Fill in your own PublisherId from https://registry.comfy.org when publishing.
+PublisherId = "your-publisher-id"
+DisplayName = "Loulan-prompt"
+Icon = ""
