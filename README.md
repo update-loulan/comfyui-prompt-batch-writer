@@ -4,6 +4,12 @@ ComfyUI 的批量提示词节点。把 `Loulan-prompt` 的字符串输出接到�
 
 A paginated prompt library for ComfyUI. Connect the node’s STRING output to a prompt input in your workflow and use the standard Run button.
 
+## 0.2.0 更新说明 · Release notes
+
+取消了 100 条提示词上限。可以搜索整份词库，按范围、手选或随机抽取来跑；带引号的多行 CSV 提示词会完整保留。提交前可查看任务总数，运行中可暂停和继续，已确认失败的任务可按原提示词和种子单独重试。[完整更新说明](https://github.com/update-loulan/comfyui-prompt-batch-writer/releases/tag/v0.2.0)
+
+Version 0.2.0 removes the 100-prompt limit and adds library search, seeded sampling, pause and resume, and individual retries. [Full release notes](https://github.com/update-loulan/comfyui-prompt-batch-writer/releases/tag/v0.2.0)
+
 ## 导入和选择 · Import and select
 
 - **导入**支持 TXT、CSV 和 JSON，可选择文件、选择文件夹或粘贴文本。先预览条数和解析错误，再决定追加或替换。TXT 文件默认整份作为一条提示词，可切换为每行一条。CSV 支持引号内的逗号、换行和双引号，识别 `prompt`、`text`、`提示词` 等列名，缺少可识别的表头时取第一列。JSON 支持字符串数组以及含有 `prompts` 数组的对象。
