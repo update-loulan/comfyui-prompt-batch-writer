@@ -1,63 +1,55 @@
 # Loulan-prompt
 
-A ComfyUI node for batch-running prompt tasks. Write prompts ahead of time (e.g. with an LLM tool) and load them from **txt / json / csv** files, then queue them all at once.
+ComfyUI 的批量提示词节点。把 `Loulan-prompt` 的字符串输出接到工作流的提示词输入，然后用 ComfyUI 的运行按钮提交。支持中文和英文界面。
 
-一个 ComfyUI 节点，用于批量执行提示词任务。可以提前用 LLM 工具写好提示词，转成 **txt / json / csv** 文件导入，一次跑完。
+A paginated prompt library for ComfyUI. Connect the node’s STRING output to a prompt input in your workflow and use the standard Run button.
 
----
+## 导入和选择 · Import and select
 
-## Quick start / 快速上手
+- **导入**支持 TXT、CSV 和 JSON，可选择文件、选择文件夹或粘贴文本。先预览条数和解析错误，再决定追加或替换。TXT 文件默认整份作为一条提示词，可切换为每行一条。CSV 支持引号内的逗号、换行和双引号，识别 `prompt`、`text`、`提示词` 等列名，缺少可识别的表头时取第一列。JSON 支持字符串数组以及含有 `prompts` 数组的对象。
+- **浏览**每页显示 25 条，可搜索整份图库。搜索影响浏览结果，运行范围由选择模式决定。
+- **选择**支持全部、按原始序号选范围、手动勾选以及随机抽 N 条。空白和禁用行会跳过。范围包含起止两端，随机抽取不会重复选择同一行。
+- **打乱顺序**单独控制执行次序。默认按图库顺序提交。使用同一份图库和抽取种子可重现抽样，改变排序种子可打乱同一组结果。采样器种子仍由工作流控制。
+- **运行**前查看任务数，即有效行数乘以 ComfyUI 的批次数。全局触发词会加在每条正文前。工作流保存完整图库；批次生成的 PNG 保存该项的提示词，拖回画布可复现单项。
 
-| Step | English | 中文 |
-|---|---|---|
-| 1 | Double-click the canvas and type `loulan prompt` to add the node. | 双击画布空白处，输入 `loulan prompt` 弹出节点。 |
-| 2 | Connect the node's `prompt` output to the CLIP text (positive) input. | 把节点接到 CLIP 提示词输入（正向）那里。 |
-| 3 | Use the language toggle to switch 中文 / English. | 用语言控件切换中文 / English。 |
+Import TXT, CSV or JSON, preview the results, then append or replace. Browse and search the whole library. Choose all eligible rows, an inclusive range, a manual selection or a seeded sample without replacement. Optional shuffling uses a separate seed. The preview shows the selected row count multiplied by the ComfyUI batch count.
 
----
+## 队列与重试 · Queue and retry
 
-## Features / 功能说明
+运行时会固定本批的选词和工作流，并分批把任务交给 ComfyUI。暂停、继续和停止控制后续提交，已经取得任务 ID 的项目仍由 ComfyUI 队列处理。确认执行失败的项目可以用原提示词和原种子重试。响应丢失时请先核对队列和历史记录，避免重复出图。
 
-### Prompt count · 提示词数量
-Choose how many prompt boxes are active. / 选择参与跑图的提示词数量。
+运行期间请保持该 ComfyUI 页面打开。待提交的进度保存在当前页面中；刷新前请先保存工作流。直接调用后端 API 时，每次提交执行一个 `prompt` 值。
 
-### Global TAG / Trigger · 全局TAG（触发词）
-Type the LoRA trigger word here. For example, if you are writing 10 character prompts, the LLM only needs to write the prompt content — put the shared trigger word here and it is automatically prefixed to every prompt.
+使用需要账号验证的合作伙伴节点时，提交期间请保持原工作流处于选中状态。本地工作流支持 ComfyUI 内置的固定、递增、递减和随机种子模式。依赖第三方扩展在每次入队时动态改写其他参数的工作流，应先用小批量核对参数。
 
-输入 LoRA 的触发词。比如我要写 10 组人物提示词，LLM 只需要写好提示词内容，这里输入全局提示词的触发词即可，它会自动加到每条提示词前面。
+The browser feeds a bounded number of jobs at a time. Pausing or stopping the feeder leaves already accepted jobs in ComfyUI’s queue. Keep the page open while feeding. A retry of a confirmed execution failure uses its original prompt and seed.
 
-### Clear History · 清理历史输入记录
-When you reduce the prompt count, hidden prompts are kept by default. Turn this **ON** to clear them instead. Example: you ran 20 prompts for "Character 1", now you switch to another LoRA but want to keep Character 1's prompts — leave this **OFF**.
+## 示例 · Examples
 
-当你减少提示词数量时，默认会保留被隐藏的提示词；打开这个开关则会清除它们。比如我刚跑了一遍「人物1」的 20 组提示词，现在要换 LoRA 但又想保留「人物1」的提示词，这里选择关闭即可。
+打开独立示例并点击「运行」，两条示例词会依次送到 ComfyUI 内置的「预览为文本」节点。可以直接编辑示例词，也可以在「导入」页替换整份词库。[下载示例工作流](example_workflows/batch-prompt-preview.json)
 
-### Per-prompt toggle · 每条独立开关
-Every prompt has its own **Enable** switch. / 每个提示词组都有单独的开关。
+Run the standalone workflow to send both sample prompts to ComfyUI’s built-in **Preview as Text** node in order. It runs without a model download. [Open the example workflow](example_workflows/batch-prompt-preview.json)
 
-### Presets · 预设
-Save the current prompts to a JSON file and reuse them later. Example: on 2026-09-01 you used a set of prompts and liked the result — click **Save as Preset**; on 2026-09-05, when running a different LoRA, click **Apply Preset** to reuse those prompts.
+CSV 中的第一条提示词跨两行。导入下例会得到两条提示词。
 
-把当前提示词保存到一个 json 文件里，下次跑图时直接复用。比如 2026 年 9 月 1 日用了某组提示词、觉得效果不错，点击「保存为预设」；2026 年 9 月 5 日跑其他 LoRA 时点击「应用预设」，就能直接用之前的提示词。
+```csv
+prompt,style
+"A white cat
+sitting beside a window",photo
+A small wooden boat,illustration
+```
 
-### Import File · 输入文件
-Select a folder of **txt / csv / json** files. / 选择 **txt / csv / json** 文件（文件夹）导入。
+JSON 可以直接写成字符串数组。
 
-### Clear All · 全部清理
-Reset the prompt count and all prompts back to the initial state. / 把输入数量和提示词全部恢复到初始状态。
+```json
+["A white cat beside a window", "A small wooden boat"]
+```
 
----
+## 安装与兼容 · Installation and compatibility
 
-## Install / 安装
+将此目录放入 ComfyUI 的 `custom_nodes`，重启服务并刷新前端，在节点搜索里输入 `Loulan-prompt`。已有 0.1.1 工作流会迁移到图库界面。旧预设仍可读取，应用预设会还原它保存的全局触发词。
 
-Copy this folder into `ComfyUI/custom_nodes/` and restart ComfyUI. Requires ComfyUI **0.3.0+** (V3 node API).
-
-把本目录放到 `ComfyUI/custom_nodes/` 下并重启 ComfyUI。需要 ComfyUI **0.3.0+**（V3 节点接口）。
-
-## Notes / 注意事项
-
-- **Batch count**: the queue is split into `prompt count × batch count` tasks (ComfyUI's batch setting applies to every prompt). / **批次数**：队列拆分为「提示词数量 × 批次数」条任务（ComfyUI 的批次设置会作用于每条提示词）。
-- **Seeds**: seed behavior follows ComfyUI's own seed settings (fixed / increment / randomize). / **种子**：种子行为跟随 ComfyUI 的 seed 设置（固定 / 递增 / 随机）。
-- **API mode**: batch splitting is a browser-side feature. Calling the workflow directly through the API queues only one prompt (the node forwards the current value). / **API 模式**：批量拆分是浏览器端功能，直接通过 API 调用工作流只会执行当前一条提示词（节点只转发当前值）。
+Install under `ComfyUI/custom_nodes`, restart ComfyUI and refresh the frontend. Existing 0.1.1 workflows and presets are supported. Batch selection runs in the browser. Direct API submissions execute one value of the node’s `prompt` input per queue item.
 
 ## License / 许可证
 

@@ -1,0 +1,74 @@
+.loulan-editor {
+  --ll-line: var(--border-color, #555);
+  --ll-input: var(--comfy-input-bg, #252525);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  box-sizing: border-box;
+  overflow: auto;
+  overscroll-behavior: contain;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  background: var(--comfy-menu-bg, #353535);
+  color: var(--input-text, #ddd);
+  font: 13px/1.35 system-ui, sans-serif;
+  text-align: start;
+  user-select: text;
+  pointer-events: auto;
+}
+.loulan-editor *, .loulan-editor *::before { box-sizing: border-box; }
+.loulan-editor [hidden], .loulan-editor :is(.ll-note,.ll-status):empty { display: none; }
+.loulan-editor :is(input, textarea, select, button) {
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid var(--ll-line);
+  border-radius: 4px;
+  color: inherit;
+  background: var(--ll-input);
+  padding: 3px 6px;
+  font: inherit;
+  line-height: 1.4;
+}
+.loulan-editor :is(button, select, input[type=checkbox]) { cursor: pointer; }
+.loulan-editor input[type=checkbox] { width: 14px; height: 14px; margin: 0; accent-color: #5d9fc0; }
+.loulan-editor input[type=number] { width: 5.2em; }
+.loulan-editor button:disabled { opacity: .45; cursor: default; }
+.loulan-editor button:not(:disabled):hover { border-color: currentColor; }
+.loulan-editor :is(button, input, textarea, select):focus-visible { outline: 2px solid #74acc8; outline-offset: -2px; }
+.loulan-editor :is(.ll-head, .ll-options, .ll-line, .ll-pager, .ll-tabs, .ll-label, .ll-status) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.loulan-editor :is(.ll-line, .ll-options, .ll-status) { flex-wrap: wrap; }
+.loulan-editor .ll-label { white-space: nowrap; }
+.loulan-editor .ll-head > label, .loulan-editor .ll-head input, .loulan-editor input[type=search],
+.loulan-editor .ll-line > :is(input[type=text],select) { flex: 1 1 0; min-width: 0; }
+.loulan-editor .ll-options input[type=text] { width: 6em; }
+.loulan-editor .ll-summary button { width: 100%; text-align: start; font-weight: 600; }
+.loulan-editor .ll-tabs { border-bottom: 1px solid var(--ll-line); gap: 2px; }
+.loulan-editor .ll-tabs button { background: transparent; border: 0; border-bottom: 2px solid transparent; border-radius: 0; padding: 4px 12px; }
+.loulan-editor .ll-tabs button[aria-pressed=true] { border-bottom-color: #74acc8; font-weight: 600; }
+.loulan-editor .ll-body { min-height: 80px; flex: 1 1 auto; display: flex; flex-direction: column; gap: 7px; overflow-y: auto; }
+.loulan-editor .ll-rows { flex: 1 1 auto; min-height: 36px; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.loulan-editor .ll-row { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 6px; align-items: start; padding: 5px 1px; border-bottom: 1px solid var(--ll-line); }
+.loulan-editor .ll-row > button { margin-top: 18px; }
+.loulan-editor .ll-flags { padding-top: 20px; font-size: 11px; display: grid; gap: 4px; }
+.loulan-editor .ll-content { min-width: 0; }
+.loulan-editor .ll-content textarea { display: block; width: 100%; min-height: 35px; resize: vertical; }
+.loulan-editor .ll-source { display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+.loulan-editor .ll-disabled .ll-source { opacity: .65; }
+.loulan-editor .ll-pager { justify-content: flex-end; font-variant-numeric: tabular-nums; }
+.loulan-editor .ll-pager > span:first-child { margin-inline-end: auto; }
+.loulan-editor .ll-pager button { min-width: 30px; }
+.loulan-editor .ll-empty { padding: 10px; }
+.loulan-editor .ll-paste { flex: 0 0 auto; min-height: 70px; width: 100%; resize: vertical; }
+.loulan-editor .ll-preview { margin: 5px 0; padding-inline-start: 2em; overflow: auto; max-height: 68px; }
+.loulan-editor .ll-preview li { overflow-wrap: anywhere; }
+.loulan-editor .ll-import-preview { overflow-wrap: anywhere; }
+.loulan-editor .ll-errors { margin: 2px 0; padding-inline-start: 1.5em; }
+.loulan-editor .ll-note, .loulan-editor .ll-status { font-size: 12px; overflow-wrap: anywhere; }
+.loulan-editor .ll-status { padding-top: 5px; border-top: 1px solid var(--ll-line); }
+.loulan-editor .ll-note, .loulan-editor .ll-status small { max-height: 4.5em; overflow-y: auto; }
